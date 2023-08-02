@@ -10,7 +10,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import Heading from '@/components/ui/heading';
-import ImageUpload from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/hooks/use-toast';
@@ -29,12 +28,12 @@ const formSchema = z.object({
 });
 
 interface SizeFormProps {
-  initialdData: Size | null;
+  initialData: Size | null;
 }
 
 type BillboardFormSchemaValues = z.infer<typeof formSchema>;
 
-const SizeForm: FC<SizeFormProps> = ({ initialdData }) => {
+const SizeForm: FC<SizeFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -42,21 +41,21 @@ const SizeForm: FC<SizeFormProps> = ({ initialdData }) => {
 
   const form = useForm<BillboardFormSchemaValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialdData || {
+    defaultValues: initialData || {
       name: '',
       value: '',
     },
   });
 
-  const title = initialdData ? 'Edit Size' : 'Create Size';
-  const description = initialdData ? 'Edit Size' : 'Add a new Size';
-  const toastMessage = initialdData ? 'Size updated' : 'Size created';
-  const action = initialdData ? 'Save changes' : 'Create';
+  const title = initialData ? 'Edit Size' : 'Create Size';
+  const description = initialData ? 'Edit Size' : 'Add a new Size';
+  const toastMessage = initialData ? 'Size updated' : 'Size created';
+  const action = initialData ? 'Save changes' : 'Create';
 
   const onSubmit = async (data: BillboardFormSchemaValues) => {
     try {
       setIsLoading(true);
-      if (initialdData) {
+      if (initialData) {
         await axios.patch(
           `/api/${params.storeId}/sizes/${params.sizeId}`,
           data
@@ -92,8 +91,7 @@ const SizeForm: FC<SizeFormProps> = ({ initialdData }) => {
     } catch (error) {
       toast({
         title: 'Something went wrong!',
-        description:
-          'Make sure you removed all products using this size first',
+        description: 'Make sure you removed all products using this size first',
         variant: 'destructive',
       });
     } finally {
@@ -112,7 +110,7 @@ const SizeForm: FC<SizeFormProps> = ({ initialdData }) => {
       />
       <div className='flex items-center justify-between'>
         <Heading title={title} description={description} />
-        {initialdData && (
+        {initialData && (
           <Button
             variant={'destructive'}
             size='sm'

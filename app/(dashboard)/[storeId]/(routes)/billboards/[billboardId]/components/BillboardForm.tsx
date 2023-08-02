@@ -29,12 +29,12 @@ const formSchema = z.object({
 });
 
 interface BillboardFormProps {
-  initialdData: Billboard | null;
+  initialData: Billboard | null;
 }
 
 type BillboardFormSchemaValues = z.infer<typeof formSchema>;
 
-const BillboardForm: FC<BillboardFormProps> = ({ initialdData }) => {
+const BillboardForm: FC<BillboardFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -42,21 +42,21 @@ const BillboardForm: FC<BillboardFormProps> = ({ initialdData }) => {
 
   const form = useForm<BillboardFormSchemaValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialdData || {
+    defaultValues: initialData || {
       label: '',
       imageUrl: '',
     },
   });
 
-  const title = initialdData ? 'Edit billboard' : 'Create Billboard';
-  const description = initialdData ? 'Edit billboard' : 'Add a new billboard';
-  const toastMessage = initialdData ? 'Billboard updated' : 'Billboard created';
-  const action = initialdData ? 'Save changes' : 'Create';
+  const title = initialData ? 'Edit billboard' : 'Create Billboard';
+  const description = initialData ? 'Edit billboard' : 'Add a new billboard';
+  const toastMessage = initialData ? 'Billboard updated' : 'Billboard created';
+  const action = initialData ? 'Save changes' : 'Create';
 
   const onSubmit = async (data: BillboardFormSchemaValues) => {
     try {
       setIsLoading(true);
-      if (initialdData) {
+      if (initialData) {
         await axios.patch(
           `/api/${params.storeId}/billboards/${params.billboardId}`,
           data
@@ -114,7 +114,7 @@ const BillboardForm: FC<BillboardFormProps> = ({ initialdData }) => {
       />
       <div className='flex items-center justify-between'>
         <Heading title={title} description={description} />
-        {initialdData && (
+        {initialData && (
           <Button
             variant={'destructive'}
             size='sm'

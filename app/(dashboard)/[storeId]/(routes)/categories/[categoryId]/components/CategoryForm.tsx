@@ -10,9 +10,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import Heading from '@/components/ui/heading';
-import ImageUpload from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,13 +35,13 @@ const formSchema = z.object({
 });
 
 interface CategoryFormProps {
-  initialdData: Category | null;
+  initialData: Category | null;
   billboards: Billboard[];
 }
 
 type CategoryFormSchemaValues = z.infer<typeof formSchema>;
 
-const CategoryForm: FC<CategoryFormProps> = ({ initialdData ,billboards}) => {
+const CategoryForm: FC<CategoryFormProps> = ({ initialData, billboards }) => {
   const params = useParams();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -45,21 +49,21 @@ const CategoryForm: FC<CategoryFormProps> = ({ initialdData ,billboards}) => {
 
   const form = useForm<CategoryFormSchemaValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialdData || {
+    defaultValues: initialData || {
       name: '',
       billboardId: '',
     },
   });
 
-  const title = initialdData ? 'Edit Category' : 'Create Category';
-  const description = initialdData ? 'Edit Category' : 'Add a new Category';
-  const toastMessage = initialdData ? 'Category updated' : 'Category created';
-  const action = initialdData ? 'Save changes' : 'Create';
+  const title = initialData ? 'Edit Category' : 'Create Category';
+  const description = initialData ? 'Edit Category' : 'Add a new Category';
+  const toastMessage = initialData ? 'Category updated' : 'Category created';
+  const action = initialData ? 'Save changes' : 'Create';
 
   const onSubmit = async (data: CategoryFormSchemaValues) => {
     try {
       setIsLoading(true);
-      if (initialdData) {
+      if (initialData) {
         await axios.patch(
           `/api/${params.storeId}/categories/${params.categoryId}`,
           data
@@ -117,7 +121,7 @@ const CategoryForm: FC<CategoryFormProps> = ({ initialdData ,billboards}) => {
       />
       <div className='flex items-center justify-between'>
         <Heading title={title} description={description} />
-        {initialdData && (
+        {initialData && (
           <Button
             variant={'destructive'}
             size='sm'
@@ -173,12 +177,12 @@ const CategoryForm: FC<CategoryFormProps> = ({ initialdData ,billboards}) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {billboards.map((billboard)=>(
+                      {billboards.map((billboard) => (
                         <SelectItem key={billboard.id} value={billboard.id}>
                           {billboard.label}
                         </SelectItem>
                       ))}
-                      </SelectContent>
+                    </SelectContent>
                   </Select>
                   <FormMessage />
                 </FormItem>

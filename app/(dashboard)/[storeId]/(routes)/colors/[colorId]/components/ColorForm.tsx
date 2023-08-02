@@ -30,12 +30,12 @@ const formSchema = z.object({
 });
 
 interface ColorFormProps {
-  initialdData: Color | null;
+  initialData: Color | null;
 }
 
 type ColorFormSchemaValues = z.infer<typeof formSchema>;
 
-const ColorForm: FC<ColorFormProps> = ({ initialdData }) => {
+const ColorForm: FC<ColorFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -43,21 +43,21 @@ const ColorForm: FC<ColorFormProps> = ({ initialdData }) => {
 
   const form = useForm<ColorFormSchemaValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialdData || {
+    defaultValues: initialData || {
       name: '',
       value: '',
     },
   });
 
-  const title = initialdData ? 'Edit Color' : 'Create Color';
-  const description = initialdData ? 'Edit Color' : 'Add a new Color';
-  const toastMessage = initialdData ? 'Color updated' : 'Color created';
-  const action = initialdData ? 'Save changes' : 'Create';
+  const title = initialData ? 'Edit Color' : 'Create Color';
+  const description = initialData ? 'Edit Color' : 'Add a new Color';
+  const toastMessage = initialData ? 'Color updated' : 'Color created';
+  const action = initialData ? 'Save changes' : 'Create';
 
   const onSubmit = async (data: ColorFormSchemaValues) => {
     try {
       setIsLoading(true);
-      if (initialdData) {
+      if (initialData) {
         await axios.patch(
           `/api/${params.storeId}/colors/${params.colorId}`,
           data
@@ -93,7 +93,8 @@ const ColorForm: FC<ColorFormProps> = ({ initialdData }) => {
     } catch (error) {
       toast({
         title: 'Something went wrong!',
-        description: 'Make sure you removed all products using this color first',
+        description:
+          'Make sure you removed all products using this color first',
         variant: 'destructive',
       });
     } finally {
@@ -112,7 +113,7 @@ const ColorForm: FC<ColorFormProps> = ({ initialdData }) => {
       />
       <div className='flex items-center justify-between'>
         <Heading title={title} description={description} />
-        {initialdData && (
+        {initialData && (
           <Button
             variant={'destructive'}
             size='sm'

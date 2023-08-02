@@ -25,7 +25,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 interface SettingsFormProps {
-  initialdData: Store;
+  initialData: Store;
 }
 
 const formSchema = z.object({
@@ -34,7 +34,7 @@ const formSchema = z.object({
 
 type SettingsFormSchemaValues = z.infer<typeof formSchema>;
 
-const SettingsForm: FC<SettingsFormProps> = ({ initialdData }) => {
+const SettingsForm: FC<SettingsFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
   const origin = useOrigin();
@@ -43,7 +43,7 @@ const SettingsForm: FC<SettingsFormProps> = ({ initialdData }) => {
 
   const form = useForm<SettingsFormSchemaValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialdData,
+    defaultValues: initialData,
   });
 
   const onSubmit = async (data: SettingsFormSchemaValues) => {

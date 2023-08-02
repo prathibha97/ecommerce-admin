@@ -1,38 +1,40 @@
-import prisma from '@/lib/prisma'
-import { auth } from '@clerk/nextjs'
-import { redirect } from 'next/navigation'
-import { FC } from 'react'
-import SettingsForm from './components/SettingsForm'
+import prisma from '@/lib/prisma';
+import { auth } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
+import { FC } from 'react';
+import SettingsForm from './components/SettingsForm';
 
 interface pageProps {
   params: {
-    storeId: string
-  }
+    storeId: string;
+  };
 }
 
-const page: FC<pageProps> = async({params}) => {
-  const {userId} = auth()
+const page: FC<pageProps> = async ({ params }) => {
+  const { userId } = auth();
 
-  if(!userId){
-    redirect('/sign-in')
+  if (!userId) {
+    redirect('/sign-in');
   }
 
   const store = await prisma.store.findFirst({
-    where:{
+    where: {
       id: params.storeId,
-      userId
-    }
-  })
+      userId,
+    },
+  });
 
-  if(!store){
-    redirect('/')
+  if (!store) {
+    redirect('/');
   }
 
-  return <div className='flex flex-col'>
-    <div className='flex-1 space-y-4 p-8 pt-6'>
-      <SettingsForm initialdData={store}/>
+  return (
+    <div className='flex flex-col'>
+      <div className='flex-1 space-y-4 p-8 pt-6'>
+        <SettingsForm initialData={store} />
+      </div>
     </div>
-  </div>
-}
+  );
+};
 
-export default page
+export default page;
